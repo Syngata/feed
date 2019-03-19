@@ -3,13 +3,21 @@ package gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class ClientGui extends JFrame {
 
@@ -25,40 +33,58 @@ public class ClientGui extends JFrame {
 	private JLabel statusTxt;
 	private JTextField statusInf;
 	private JButton connect;
+	private PrintWriter pwr;
+	private Socket clSock;
+	private final int ServerPort = 28070;
+	private InputStreamReader isr;
+	private BufferedReader bfr;
+	private JScrollPane scp;
 
 	public ClientGui() {
 
+		super("News client");
 		initComp();
 		layoutComp();
+		// activateBtn();
 	}
 
 	private void initComp() {
-		txtArea = new JTextArea(20, 20);
+		txtArea = new JTextArea(20, 44);
+		txtArea.setEditable(false);
+		scp = new JScrollPane(txtArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
 		txtPanel = new JPanel();
 		txtPanel.setSize(200, 200);
 
 		infoPanel = new JPanel();
 		ipTxt = new JLabel("Ip adress");
 		ipInf = new JTextField(15);
+		ipInf.setEditable(false);
 		tcpTxt = new JLabel("TCP socket port");
 		tcpInf = new JTextField(12);
+		tcpInf.setEditable(false);
 		dateTimeTxt = new JLabel("Datum i vrijeme");
 		dateTimeinf = new JTextField(15);
+		dateTimeinf.setEditable(false);
 		statusTxt = new JLabel("Status");
 		statusInf = new JTextField(15);
+		statusInf.setEditable(false);
 		connect = new JButton("connect");
 
 	}
 
 	private void layoutComp() {
 
-		setSize(700, 700);
+		setSize(550, 550);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
 		setResizable(true);
+		setName("News client");
 		setLocationRelativeTo(null);
 		GridBagLayout gridLay = new GridBagLayout();
 		setLayout(gridLay);
+		txtPanel.add(scp);
 		txtPanel.setLayout(gridLay);
 		infoPanel.setLayout(gridLay);
 
@@ -67,7 +93,7 @@ public class ClientGui extends JFrame {
 		gdc.insets = new Insets(0, 0, 20, 0);
 		gdc.gridx = 0;
 		gdc.gridy = 0;
-		add(txtPanel.add(txtArea), gdc);
+		add(txtPanel, gdc);
 
 		gdc.gridx = 0;
 		gdc.gridy = 1;
@@ -113,6 +139,38 @@ public class ClientGui extends JFrame {
 		gdc.gridy = 3;
 		infoPanel.add(connect, gdc);
 
+		Border outer = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+		Border inner = BorderFactory.createTitledBorder("News");
+		Border cmpBrd = BorderFactory.createCompoundBorder(outer, inner);
+		infoPanel.setBorder(new TitledBorder("Connection info"));
+		txtPanel.setBorder(cmpBrd);
+
+	}
+
+	public void setPrinterWriter(PrintWriter writer) {
+
+		this.pwr = writer;
+	}
+
+	public void writeReceivedMessage(String msg) {
+		txtArea.append(msg);
+		txtArea.append("\n");
+	}
+
+	public Socket getClSock() {
+		return clSock;
+	}
+
+	public InputStreamReader getIsr() {
+		return isr;
+	}
+
+	public BufferedReader getBfr() {
+		return bfr;
+	}
+
+	public PrintWriter getPwr() {
+		return pwr;
 	}
 
 }

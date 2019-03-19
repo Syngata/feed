@@ -73,13 +73,20 @@ public class Server {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
+			long start = System.currentTimeMillis();
+
 			while (clSock.isConnected()) {
-				srvGui.write2TxtAr(timeList[ThreadLocalRandom.current().nextInt(0, timeList.length)],
-						titleList[ThreadLocalRandom.current().nextInt(0, titleList.length)],
-						newsTxtList[ThreadLocalRandom.current().nextInt(0, newsTxtList.length)]);
-				send2All(timeList[ThreadLocalRandom.current().nextInt(0, timeList.length)],
-						titleList[ThreadLocalRandom.current().nextInt(0, titleList.length)],
-						newsTxtList[ThreadLocalRandom.current().nextInt(0, newsTxtList.length)]);
+
+				if (System.currentTimeMillis() - start > 5000) {
+					srvGui.write2TxtAr(timeList[ThreadLocalRandom.current().nextInt(0, timeList.length)],
+							titleList[ThreadLocalRandom.current().nextInt(0, titleList.length)],
+							newsTxtList[ThreadLocalRandom.current().nextInt(0, newsTxtList.length)]);
+					send2All(timeList[ThreadLocalRandom.current().nextInt(0, timeList.length)],
+							titleList[ThreadLocalRandom.current().nextInt(0, titleList.length)],
+							newsTxtList[ThreadLocalRandom.current().nextInt(0, newsTxtList.length)]);
+					start = System.currentTimeMillis();
+
+				}
 			}
 		}
 
@@ -87,13 +94,13 @@ public class Server {
 			return pwriter;
 		}
 
-		public void send2All(String title, String txt, String time) {
+		public void send2All(String time, String title, String txt) {
 
 			Iterator<ClientHandler> it = clhList.iterator();
 			while (it.hasNext()) {
 				ClientHandler cl = it.next();
 				PrintWriter pwr = cl.getOutWriter();
-				pwr.println(time + "\n" + title + "\n" + txt);
+				pwr.println("Vrijeme : " + time + "   " + "Naslov : " + title + "\n" + txt + "\n\n");
 				pwr.flush();
 
 			}

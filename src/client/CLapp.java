@@ -10,7 +10,7 @@ public class CLapp {
 		// new Client();
 		// new Client();
 
-		new ClientGui();
+		ClientGui clg = new ClientGui();
 	}
 
 }

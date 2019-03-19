@@ -21,14 +21,19 @@ public class Client {
 
 	public Client() throws IOException {
 
-		clFrame = new ClientGui();
-		start();
+	}
 
+	public void setClFrame(ClientGui clFrame) {
+		this.clFrame = clFrame;
 	}
 
 	public void start() throws IOException {
 
 		SetNet();
+	}
+
+	public Socket getConnection() {
+		return connection;
 	}
 
 	private void SetNet() throws IOException {
@@ -52,15 +57,16 @@ public class Client {
 		@Override
 		public void run() {
 			String msg;
+
 			while (true) {
 				try {
 
 					while ((msg = bfr.readLine()) != null) {
 						clFrame.writeReceivedMessage(msg);
+
 					}
 
-				}
-				catch (IOException ex) {
+				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
 

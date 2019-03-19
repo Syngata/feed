@@ -10,6 +10,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,16 +48,21 @@ public class ClientGui extends JFrame {
 	private InputStreamReader isr;
 	private BufferedReader bfr;
 	private JScrollPane scp;
+	private Client cl;
 
 	public ClientGui() throws IOException {
 
-		super("News client");
+		// super("News client");
+
 		initComp();
 		layoutComp();
+		cl.setClFrame(this);
 		activateBtn();
 	}
 
-	private void initComp() {
+	private void initComp() throws IOException {
+
+		cl = new Client();
 		txtArea = new JTextArea(20, 44);
 		txtArea.setEditable(false);
 		scp = new JScrollPane(txtArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -79,6 +88,20 @@ public class ClientGui extends JFrame {
 
 	}
 
+	public String getCurrentTimeUsingCalendar() {
+
+		Calendar cal = Calendar.getInstance();
+
+		Date date = cal.getTime();
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+		String formattedDate = dateFormat.format(date);
+
+		return formattedDate;
+
+	}
+
 	private void activateBtn() throws IOException {
 
 		connect.addActionListener(new ActionListener() {
@@ -87,13 +110,21 @@ public class ClientGui extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				try {
-					new Client();
-				}
-				catch (IOException e) {
+					cl.start();
+					ipInf.setText(cl.getConnection().getInetAddress().toString());
+					tcpInf.setText(Integer.toString(cl.getConnection().getPort()));
+					dateTimeinf.setText(getCurrentTimeUsingCalendar());
+					if (cl.getConnection().isConnected()) {
+						statusInf.setText("Connected....");
+					} else {
+						statusInf.setText("Not connected");
+					}
+
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				dispose();
+
 			}
 		});
 	}

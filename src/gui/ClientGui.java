@@ -3,7 +3,10 @@ package gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -18,6 +21,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+
+import client.Client;
 
 public class ClientGui extends JFrame {
 
@@ -40,12 +45,12 @@ public class ClientGui extends JFrame {
 	private BufferedReader bfr;
 	private JScrollPane scp;
 
-	public ClientGui() {
+	public ClientGui() throws IOException {
 
 		super("News client");
 		initComp();
 		layoutComp();
-		// activateBtn();
+		activateBtn();
 	}
 
 	private void initComp() {
@@ -72,6 +77,25 @@ public class ClientGui extends JFrame {
 		statusInf.setEditable(false);
 		connect = new JButton("connect");
 
+	}
+
+	private void activateBtn() throws IOException {
+
+		connect.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				try {
+					new Client();
+				}
+				catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				dispose();
+			}
+		});
 	}
 
 	private void layoutComp() {
@@ -155,22 +179,6 @@ public class ClientGui extends JFrame {
 	public void writeReceivedMessage(String msg) {
 		txtArea.append(msg);
 		txtArea.append("\n");
-	}
-
-	public Socket getClSock() {
-		return clSock;
-	}
-
-	public InputStreamReader getIsr() {
-		return isr;
-	}
-
-	public BufferedReader getBfr() {
-		return bfr;
-	}
-
-	public PrintWriter getPwr() {
-		return pwr;
 	}
 
 }

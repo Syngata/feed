@@ -131,10 +131,10 @@ public class ClientGui extends JFrame {
 
 	private void layoutComp() {
 
-		setSize(550, 550);
+		setSize(580, 550);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setVisible(true);
-		setResizable(true);
+		setResizable(false);
 		setName("News client");
 		setLocationRelativeTo(null);
 		GridBagLayout gridLay = new GridBagLayout();
